@@ -1,17 +1,17 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import clientAxios from '../../utilities/axiosClient';
-import InputComponent from '../../components/InputComponent';
-import ButtonComponent from '../../components/ButtonComponent';
-import { Alert } from '../../components';
+import {useFetchAndLoad} from '../../hooks';
+import { resetPasswordService, verifyTokenService } from './services';
+import { Alert, ButtonComponent, InputComponent } from '../../components';
 
-const ResetPassword = () => {
+export const ResetPassword = () => {
   const [password, setPassword] = useState('');
-  const [validtoken, setValidToken] = useState(false);
+  const [validtoken, setValidToken] = useState<any>(false);
   const [alert, setAlert] = useState<any>({});
   const [alertToken, setAlertToken] = useState<any>({});
   const [modifiedPassword, setModifiedPassword] = useState<any>(false);
+
+  const { loading, callEndpoint } = useFetchAndLoad();
 
   const params: any = useParams<any>();
   const { token } = params;
@@ -35,9 +35,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await clientAxios.post(`/users/reset-password/${token}`, {
-        password,
-      });
+      await callEndpoint(resetPasswordService(token, { password }));
       setModifiedPassword(true);
       setAlert({});
       setPassword('');
@@ -48,21 +46,20 @@ const ResetPassword = () => {
 
   const verifyToken = async () => {
     try {
-      await axios(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/reset-password/${token}`
-      );
-      setValidToken(true);
+      const response = await callEndpoint(verifyTokenService(token));
+      setValidToken(response);
     } catch (error) {
-      setAlertToken({
-        msg: 'Invalid token',
-        error: true,
-      });
+      console.log(error);
     }
   };
 
   useEffect(() => {
     verifyToken();
   }, []);
+
+  if (loading) {
+    return <p>loading</p>;
+  }
 
   return (
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
@@ -75,10 +72,6 @@ const ResetPassword = () => {
       >
         {validtoken && (
           <>
-            <p className="text-center font-semibold my-4">
-              We'll send you an email with the instructions to reset your
-              password
-            </p>
             <InputComponent
               labelText="Password"
               id="Password"
@@ -88,7 +81,11 @@ const ResetPassword = () => {
               onChange={(e: any) => setPassword(e.target.value)}
             />
 
-            <ButtonComponent type="submit" btnText="Send instructions" />
+            <ButtonComponent
+              type="submit"
+              btnText="Reset Password"
+              addtionalStyles="mt-4"
+            />
             {msg && <Alert alert={alert} />}
           </>
         )}
@@ -103,5 +100,3 @@ const ResetPassword = () => {
     </div>
   );
 };
-
-export default ResetPassword;

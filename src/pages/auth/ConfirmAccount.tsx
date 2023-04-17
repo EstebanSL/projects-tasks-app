@@ -1,21 +1,16 @@
-import axios from 'axios';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { ValidateAccountService } from './services/Auth.service';
+import { useFetchAndLoad } from '../../hooks';
 
-const ConfirmAccount = () => {
+export const ConfirmAccount = () => {
   const params: any = useParams<any>();
+  const { loading, callEndpoint } = useFetchAndLoad();
   const { token } = params;
-
-  console.log(token);
 
   const confirmAccount = async () => {
     try {
-      const url = `${
-        import.meta.env.VITE_BACKEND_URL
-      }/api/users/confirm/${token}`;
-      console.log(url);
-      const { data } = await axios(url);
-      console.log(data);
+      await callEndpoint(ValidateAccountService(token));
     } catch (error) {
       console.log(error);
     }
@@ -31,10 +26,13 @@ const ConfirmAccount = () => {
         Confirm account
       </h1>
       <div className="bg-white p-4 py-8 rounded-md flex flex-col gap-2">
-        <h1 className="text-center">Your account has been verified successfully, login <Link to='/' className='underline font-bold text-sky-600'>here</Link></h1>
+        <h1 className="text-center">
+          Your account has been verified successfully, login{' '}
+          <Link to="/" className="underline font-bold text-sky-600">
+            here
+          </Link>
+        </h1>
       </div>
     </div>
   );
 };
-
-export default ConfirmAccount;

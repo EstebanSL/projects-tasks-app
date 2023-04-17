@@ -1,7 +1,25 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const clientAxios = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`
-})
+export const clientAxios = axios.create({
+  baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`,
+});
 
-export default clientAxios
+clientAxios.interceptors.request.use(
+  (request) => {
+    const token: any = localStorage.getItem('token');
+    request.headers['Authorization'] = 'Bearer ' + token;
+    return request;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+clientAxios.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    return Promise.reject(error);
+  }
+);

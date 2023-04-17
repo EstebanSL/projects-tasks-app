@@ -1,15 +1,31 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthProvider';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks';
+import { Header, Sidebar } from '../components';
 
-const ProtectedRoute = () => {
-  const { auth, loadingAuthentication } = useContext<any>(AuthContext);
+export const ProtectedRoute = () => {
+  const { auth, loadingAuthentication } = useAuth()
 
   if (loadingAuthentication) {
-    return <p>Loading...</p>
+    return <p>Loading...</p>;
   }
 
-  return <>{auth._id ? <Outlet /> : <Navigate to="/" />}</>;
+  return (
+    <>
+      {auth._id ? (
+        <div>
+          <Header />
+          <div className='flex min-h-screen z-10'>
+            <Sidebar />
+            <main className='p-6 flex-1'>
+              <Outlet />
+            </main>
+          </div>
+        </div>
+      ) : (
+        <Navigate to="/" />
+      )}
+    </>
+  );
 };
 
 export default ProtectedRoute;

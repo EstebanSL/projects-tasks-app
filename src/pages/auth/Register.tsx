@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alert } from '../../components';
-import clientAxios from '../../utilities/axiosClient';
-import InputComponent from '../../components/InputComponent';
-import ButtonComponent from '../../components/ButtonComponent';
+import {useFetchAndLoad} from '../../hooks';
+import { RegisterUserService } from './services';
+import { Alert, ButtonComponent, InputComponent } from '../../components';
 
-const Register = () => {
+
+export const Register = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPasword] = useState('');
   const [alert, setAlert] = useState<any>({});
+  const { loading, callEndpoint } = useFetchAndLoad();
 
   const { msg } = alert;
 
@@ -39,11 +40,13 @@ const Register = () => {
     }
 
     try {
-      const response: any = await clientAxios.post(`/users`, {
-        username,
-        email,
-        password,
-      });
+      const response: any = await callEndpoint(
+        RegisterUserService({
+          username,
+          email,
+          password,
+        })
+      );
       setAlert({
         msg: response.msg,
         error: false,
@@ -53,10 +56,9 @@ const Register = () => {
       setPassword('');
       setConfirmPasword('');
     } catch (error) {
-      console.log('xd');
+      console.log(error);
     }
 
-    console.log('creating');
   };
 
   return (
@@ -107,16 +109,19 @@ const Register = () => {
         <ButtonComponent
           type="submit"
           btnText="Register"
+          addtionalStyles="mt-4"
         />
         {msg && <Alert alert={alert} />}
       </form>
 
-      <nav className='flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4'>
-        <Link className='hover:underline sm:text-center' to="/" >Already have an account? Log In</Link>
-        <Link className='hover:underline  sm:text-center' to="/reset-password">Forgot your password?</Link>
+      <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">
+        <Link className="hover:underline sm:text-center" to="/">
+          Already have an account? Log In
+        </Link>
+        <Link className="hover:underline  sm:text-center" to="/reset-password">
+          Forgot your password?
+        </Link>
       </nav>
     </div>
   );
 };
-
-export default Register;

@@ -1,14 +1,13 @@
-import axios from 'axios';
 import { createContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import clientAxios from '../utilities/axiosClient';
+import { useFetchAndLoad } from '../hooks';
+import { getProfileService } from '../pages/auth';
 
 const AuthContext = createContext({});
 
-const AuthProvider = ({ children }: any) => {
-  const [auth, setAuth] = useState({});
+export const AuthProvider = ({ children }: any) => {
+  const [auth, setAuth] = useState<any>({});
   const [loadingAuthentication, setLoadingAuthentication] = useState(true);
-  const navigate = useNavigate();
+  const {loading, callEndpoint} = useFetchAndLoad()
 
   const authenticateUser = async () => {
     const token = localStorage.getItem('token');
@@ -17,15 +16,8 @@ const AuthProvider = ({ children }: any) => {
       return;
     }
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const {data} = await clientAxios('/users/profile', config);
+      const data = await callEndpoint(getProfileService());
       setAuth(data);
-      navigate('/projects');
     } catch (error) {
       console.log(error);
       setAuth({});
@@ -46,5 +38,3 @@ const AuthProvider = ({ children }: any) => {
 };
 
 export { AuthContext };
-
-export default AuthProvider;
