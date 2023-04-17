@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const InputComponent = ({
+export const InputComponent = ({
   id,
   labelText,
   errors,
@@ -39,5 +39,3 @@ const InputComponent = ({
     </div>
   );
 };
-
-export default InputComponent;

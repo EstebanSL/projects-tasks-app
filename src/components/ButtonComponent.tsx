@@ -1,18 +1,19 @@
 import React, { MouseEventHandler } from 'react'
-import PropTypes from 'prop-types';
 
 interface Props {
   styleType?: 'primary' | 'secondary',
   onClick?: MouseEventHandler | undefined
   btnText: string,
-  type?: 'button' | 'submit'
+  type?: 'button' | 'submit',
+  addtionalStyles?: string
 }
 
-const ButtonComponent = ({
+export const ButtonComponent = ({
   type = 'submit',
   btnText = 'Confirm',
   styleType = 'primary',
-  onClick
+  onClick,
+  addtionalStyles
 }: Props) => {
 
   const styleTypeClassess: any = {
@@ -23,7 +24,7 @@ const ButtonComponent = ({
     <button 
       type={type}
       className={
-        `px-4 py-2 mt-4 rounded-md text-white font-bold hover:opacity-75 transition ease-in duration-100 ${styleTypeClassess[styleType]}`
+        `px-4 py-2 rounded-md text-white font-bold hover:opacity-75 transition ease-in duration-100 ${styleTypeClassess[styleType]} ${addtionalStyles}`
       }
       onClick={type === 'button' ? onClick : undefined}
     >
@@ -45,5 +46,3 @@ ButtonComponent.propTypes = {
     }
   },
 }
-
-export default ButtonComponent

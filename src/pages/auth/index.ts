@@ -1,5 +1,6 @@
-export { default as ConfirmAccount } from './ConfirmAccount';
-export { default as ForgotPassword } from './ForgotPassword';
-export { default as Login } from './Login';
-export { default as Register } from './Register';
-export { default as ResetPassword } from './ResetPassword';
+export * from './ConfirmAccount';
+export * from './ForgotPassword';
+export * from './Login';
+export * from './Register';
+export * from './ResetPassword';
+export * from './services';
