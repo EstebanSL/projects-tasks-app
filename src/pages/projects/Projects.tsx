@@ -1,5 +1,6 @@
-import { useProjects } from "../../hooks";
-import {PreviewProjectCard} from "./";
+import ContentWrapper from '../../components/ContentWrapper';
+import { useProjects } from '../../hooks';
+import { PreviewProjectCard } from './';
 
 export const Projects = () => {
   const { projects, loading } = useProjects();
@@ -15,17 +16,20 @@ export const Projects = () => {
 
   return (
     <>
-      <h1 className="text-4xl font-bold m-8">Projects</h1>
-      <div className="flex flex-col gap-1">
-        {projects.length === 0 ? (
-          <p>No projects found</p>
-        ) : (
-          projects.map((project: any) => {
-            return <PreviewProjectCard key={project._id} data={project} />;
-          })
-        )}
-      </div>
+      <ContentWrapper>
+        <h1 className="text-4xl font-bold mb-8 mt-4 text-center text-sky-800">
+          Projects
+        </h1>
+        <div className="flex flex-col gap-2">
+          {projects.length === 0 ? (
+            <p>No projects found</p>
+          ) : (
+            projects.map((project: any) => {
+              return <PreviewProjectCard key={project._id} data={project} />;
+            })
+          )}
+        </div>
+      </ContentWrapper>
     </>
   );
 };
-

@@ -32,7 +32,7 @@ export const ProjectForm = () => {
       : await updateProject({ name, description, deliveryDate, client });
 
     setAlert({
-      msg: 'Project was successfully created',
+      msg: `Project was successfully ${params.id ? 'updated' : 'created'}`,
       error: false,
     });
 
@@ -91,6 +91,7 @@ export const ProjectForm = () => {
       <ButtonComponent
         type="submit"
         btnText={params.id ? 'Update project' : 'Create project'}
+        addtionalStyles='mt-8 ml-auto'
       />
       {msg && <Alert alert={alert} />}
     </form>

@@ -17,6 +17,12 @@ export const updateProjectService = async (
   return await clientAxios.put(`${projectsURL}/${id}`, value);
 };
 
+export const deleteProjectService = async (
+  id: number
+): Promise<any> => {
+  return await clientAxios.delete(`${projectsURL}/${id}`);
+};
+
 export const getProjectDetailsService = async (id: any): Promise<any> => {
   return await clientAxios.get(`${projectsURL}/${id}`);
 };

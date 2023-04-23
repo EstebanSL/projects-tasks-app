@@ -1,10 +1,13 @@
+import ContentWrapper from '../../components/ContentWrapper';
 import { ProjectForm } from './';
 
 export const CreateProject = () => {
   return (
-    <div>
-      <h1>Create project</h1>
+    <ContentWrapper>
+      <h1 className="text-4xl font-bold text-sky-800 mt-4 mb-8 text-center">
+        Create project
+      </h1>
       <ProjectForm />
-    </div>
+    </ContentWrapper>
   );
 };
