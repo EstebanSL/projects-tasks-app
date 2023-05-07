@@ -88,10 +88,10 @@ export const ResetPassword = () => {
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-4 py-8 flex flex-col gap-2"
+        className="bg-white rounded-xl p-4 py-8 flex flex-col gap-2"
       >
-        <h1 className="text-4xl text-center mb-6 font-bold text-black">
-          Reset password
+        <h1 className="text-4xl text-center mb-6 font-bold text-sky-900">
+          RESET PASSWORD
         </h1>
         {validtoken && (
           <>
@@ -120,7 +120,8 @@ export const ResetPassword = () => {
               loading={loading}
               type="submit"
               btnText="Reset Password"
-              addtionalStyles="mt-4"
+              addtionalStyles="mt-4 rounded-full"
+              styleType='primary'
             />
           </>
         )}
@@ -131,7 +132,7 @@ export const ResetPassword = () => {
         )}
         {alertToken.msg && <Alert alert={alertToken} />}
         {modifiedPassword && (
-          <Link className="mx-auto my-4 text-gray-600 hover:underline" to="/">
+          <Link className="mx-auto my-4 text-sky-600 hover:underline" to="/">
             Log In
           </Link>
         )}

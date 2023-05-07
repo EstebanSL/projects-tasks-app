@@ -62,10 +62,10 @@ export const Login = () => {
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
       <form
         onSubmit={handleSubmit(loginUser)}
-        className="bg-white p-8 flex flex-col gap-2"
+        className="bg-white rounded-xl p-8 flex flex-col gap-2"
       >
-        <h1 className="text-4xl text-center mb-6 font-bold text-black">
-          Log In
+        <h1 className="text-4xl text-center mb-6 font-bold text-sky-900">
+          LOGIN
         </h1>
         <InputComponent
           labelText="Email"
@@ -116,7 +116,8 @@ export const Login = () => {
           loading={loading}
           type="submit"
           btnText="Log In"
-          addtionalStyles="mt-4"
+          addtionalStyles="mt-4 rounded-full"
+          styleType='primary'
         />
 
         <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">

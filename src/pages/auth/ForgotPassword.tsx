@@ -37,10 +37,10 @@ export const ForgotPassword = () => {
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-4 py-8 flex flex-col gap-2"
+        className="bg-white rounded-xl p-4 py-8 flex flex-col gap-2"
       >
           <h1 className="text-4xl text-center mb-6 font-bold text-black">
-            Forgot password
+            FORGOT PASSWORD
           </h1>
         <p className="text-center font-semibold my-4">
           We'll send you an email with the instructions to reset your password
@@ -73,7 +73,8 @@ export const ForgotPassword = () => {
           loading={loading}
           type="submit"
           btnText="Send instructions"
-          addtionalStyles="mt-4"
+          addtionalStyles="mt-4 rounded-full"
+          styleType='primary'
         />
         <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">
           <Link className="hover:underline sm:text-center" to="/">

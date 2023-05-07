@@ -6,7 +6,7 @@ const AuthLayout = () => {
   return (
     <>
       {
-        !auth._id ? 
+        !auth?._id ? 
         <main className="container mx-auto px-8 md:flex md:justify-center box-border">
         <div className='w-full flex justify-center'>
           <Outlet />

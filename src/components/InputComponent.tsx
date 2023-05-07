@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { getInputMessage } from '../utilities/errorsHandler';
 import { Alert } from './Alert';
 
 export const InputComponent = ({

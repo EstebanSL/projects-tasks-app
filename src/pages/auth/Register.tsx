@@ -56,10 +56,10 @@ export const Register = () => {
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
       <form
         onSubmit={handleSubmit(registerUser)}
-        className="bg-white p-8 flex flex-col gap-2 box-border"
+        className="bg-white rounded-xl p-8 flex flex-col gap-2 box-border"
       >
-        <h1 className="text-4xl text-center mb-6 font-bold text-black">
-          Register
+        <h1 className="text-4xl text-center mb-6 font-bold text-sky-900">
+          REGISTER
         </h1>
         <InputComponent
           labelText="Email"
@@ -153,7 +153,8 @@ export const Register = () => {
           loading={loading}
           type="submit"
           btnText="Register"
-          addtionalStyles="mt-4"
+          addtionalStyles="mt-4 rounded-full"
+          styleType='primary'
         />
 
         <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">

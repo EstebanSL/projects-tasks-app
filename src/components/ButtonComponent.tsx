@@ -2,7 +2,7 @@ import React, { MouseEventHandler } from 'react'
 import BtnLoader from './BtnLoader'
 
 interface Props {
-  styleType?: 'primary' | 'secondary',
+  styleType?: 'primary' | 'secondary' | 'destructive',
   onClick?: MouseEventHandler | undefined
   btnText: string,
   type?: 'button' | 'submit',
@@ -22,7 +22,8 @@ export const ButtonComponent = ({
 }: Props) => {
 
   const styleTypeClassess: any = {
-    primary: 'from-cyan-500 to-blue-500'
+    primary: 'from-cyan-500 to-blue-500',
+    destructive: 'from-red-500 to-orange-500'
   }
 
   return (
