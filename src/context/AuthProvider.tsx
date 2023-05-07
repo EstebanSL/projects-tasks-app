@@ -26,12 +26,16 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
+  const closeSessionAuth = () => {
+    setAuth({})
+  }
+
   useEffect(() => {
     authenticateUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, loadingAuthentication }}>
+    <AuthContext.Provider value={{ auth, setAuth, loadingAuthentication, closeSessionAuth }}>
       {children}
     </AuthContext.Provider>
   );

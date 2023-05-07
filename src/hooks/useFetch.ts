@@ -9,13 +9,12 @@ export const useFetchAndLoad = () => {
     let result = {} as AxiosResponse<any>;
     try {
       result = await axiosCall;
+      setLoading(false);
+    return result?.data;
     } catch (err: any) {
       setLoading(false);
       throw err;
     }
-    
-    setLoading(false);
-    return result?.data;
   };
 
   const cancelEndpoint = () => {

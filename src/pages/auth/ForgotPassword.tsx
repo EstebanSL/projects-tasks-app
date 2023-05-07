@@ -1,27 +1,23 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {InputComponent} from '../../components';
-import {ButtonComponent} from '../../components';
-import { Alert } from '../../components';
+import { InputComponent } from '../../components';
+import { ButtonComponent } from '../../components';
 import { forgotPasswordService } from './services/Auth.service';
 import { useFetchAndLoad } from '../../hooks';
+import { useForm } from 'react-hook-form';
+import { errorToast, successToast } from '../../utilities/toasts';
 
 export const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [alert, setAlert] = useState<any>({});
+
   const { loading, callEndpoint } = useFetchAndLoad();
 
-  const { msg } = alert;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
-    if (email === '') {
-      setAlert({
-        msg: 'Email is required',
-        error: true,
-      });
-      return;
-    }
+  const onSubmit = async (data: any) => {
+    const { email } = data; 
 
     try {
       const response = await callEndpoint(
@@ -30,50 +26,64 @@ export const ForgotPassword = () => {
         })
       );
       console.log(response);
-      setAlert({});
-      setEmail('');
-    } catch (error) {
+      successToast('Recovery password sent successfully')
+    } catch (error: any) {
+      errorToast(error.response.data.msg)
       console.log(error);
     }
   };
 
   return (
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
-      <h1 className="text-4xl text-center mb-6 font-bold text-sky-800">
-        Forgot password
-      </h1>
-
       <form
-        onSubmit={onSubmit}
-        className="bg-white p-4 py-8 rounded-md flex flex-col gap-2"
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white p-4 py-8 flex flex-col gap-2"
       >
+          <h1 className="text-4xl text-center mb-6 font-bold text-black">
+            Forgot password
+          </h1>
         <p className="text-center font-semibold my-4">
           We'll send you an email with the instructions to reset your password
         </p>
         <InputComponent
           labelText="Email"
-          id="Email"
+          id="email"
           type="text"
-          placeholder="Write your email"
-          value={email}
-          onChange={(e: any) => setEmail(e.target.value)}
+          placeholder="Email"
+          register={register}
+          additionalInputStyles={errors.email && 'border-b-red-500'}
+          validationSchema={{
+            required: {
+              value: true,
+              message: 'Email is required',
+            },
+            minLength: {
+              value: 6,
+              message: 'Please enter a minimum of 6 characters',
+            },
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'invalid email address',
+            },
+          }}
+          errors={errors}
         />
 
         <ButtonComponent
+          loading={loading}
           type="submit"
           btnText="Send instructions"
           addtionalStyles="mt-4"
         />
-        {msg && <Alert alert={alert} />}
+        <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">
+          <Link className="hover:underline sm:text-center" to="/">
+            Already have an account? Log In
+          </Link>
+          <Link className="hover:underline  sm:text-center" to="/register">
+            Don't have an account? Register here!
+          </Link>
+        </nav>
       </form>
-      <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">
-        <Link className="hover:underline sm:text-center" to="/">
-          Already have an account? Log In
-        </Link>
-        <Link className="hover:underline  sm:text-center" to="/register">
-          Don't have an account? Register here!
-        </Link>
-      </nav>
     </div>
   );
 };

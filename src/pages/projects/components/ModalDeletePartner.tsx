@@ -1,41 +1,47 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
+import { deletePartnersService } from '../services';
 import { useFetchAndLoad, useProjects } from '../../../hooks';
-import { deleteTaskService } from '../services/tasks.service';
+import { Dialog, Transition } from '@headlessui/react';
+import { useParams } from 'react-router-dom';
 import { useModals } from '../../../hooks/useModals';
 
-export const ModalDeleteTask = () => {
+export const ModalDeletePartner = () => {
   const {
-    task,
-    socket
+    project,
+    setProject,
+    partner
   } = useProjects();
 
   const {
-    modalDeleteTaskVisibility,
-    handleModalDeleteTaskVisibility,
+    modalDeletePartnerVisibility,
+    handleModalDeletePartnerVisibility,
   } = useModals();
-
-  const [alert, setAlert] = useState<any>({});
 
   const { loading, callEndpoint } = useFetchAndLoad();
 
+  const params = useParams()
+
   const deleteTask = async (): Promise<void> => {
     try {
-      await callEndpoint(deleteTaskService(task._id));
-      setAlert({});
-      handleModalDeleteTaskVisibility({});
-      socket.emit('deleteTask', task)
+      await callEndpoint(deletePartnersService(params.id!, { id: partner._id }));
+      const updatedProject: Project = { ...project };
+      updatedProject.partners = updatedProject.partners?.filter(
+        (StatePartner: any) => StatePartner._id !== partner._id
+      );
+      setProject(updatedProject);
+      handleModalDeletePartnerVisibility({});
     } catch (error) {
       console.log(error);
     }
+
   };
 
   return (
-    <Transition.Root show={modalDeleteTaskVisibility} as={Fragment}>
+    <Transition.Root show={modalDeletePartnerVisibility} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
-        onClose={() => handleModalDeleteTaskVisibility({})}
+        onClose={() => handleModalDeletePartnerVisibility({})}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -72,7 +78,7 @@ export const ModalDeleteTask = () => {
                 <button
                   type="button"
                   className="bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => handleModalDeleteTaskVisibility({})}
+                  onClick={() => handleModalDeletePartnerVisibility({})}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -110,10 +116,10 @@ export const ModalDeleteTask = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    <p className="text-4xl">Delete task</p>
+                    <p className="text-4xl">Delete partner</p>
                   </Dialog.Title>
                   <div>
-                    <p>A deleted task cannot be recovered</p>
+                    <p>Are you sure to delete this partner?</p>
                   </div>
                 </div>
               </div>
@@ -127,7 +133,7 @@ export const ModalDeleteTask = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleModalDeleteTaskVisibility({})}
+                  onClick={() => handleModalDeletePartnerVisibility({})}
                   className="mt-3 w-full inline-flex justify-center border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                 >
                   {' '}

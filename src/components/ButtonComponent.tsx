@@ -1,11 +1,14 @@
 import React, { MouseEventHandler } from 'react'
+import BtnLoader from './BtnLoader'
 
 interface Props {
   styleType?: 'primary' | 'secondary',
   onClick?: MouseEventHandler | undefined
   btnText: string,
   type?: 'button' | 'submit',
-  addtionalStyles?: string
+  addtionalStyles?: string,
+  children?: React.ReactNode,
+  loading?: boolean
 }
 
 export const ButtonComponent = ({
@@ -13,22 +16,28 @@ export const ButtonComponent = ({
   btnText = 'Confirm',
   styleType = 'primary',
   onClick,
-  addtionalStyles
+  addtionalStyles,
+  children,
+  loading
 }: Props) => {
 
   const styleTypeClassess: any = {
-    primary: ' bg-sky-600 '
+    primary: 'from-cyan-500 to-blue-500'
   }
 
   return (
     <button 
       type={type}
       className={
-        `px-4 py-2 rounded-md text-white font-bold hover:opacity-75 transition ease-in duration-100 ${styleTypeClassess[styleType]} ${addtionalStyles}`
+        `bg-gradient-to-r flex gap-2 items-center justify-center px-4 py-2 box-border text-white font-bold hover:opacity-75 transition ease-in duration-100 ${styleTypeClassess[styleType]} ${addtionalStyles}`
       }
       onClick={type === 'button' ? onClick : undefined}
     >
-{btnText}
+    {
+      loading ? 
+      <BtnLoader />
+      :<>{children} {' '} {btnText}</>
+    }
     </button>
   )
 }

@@ -2,23 +2,30 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import { useFetchAndLoad, useProjects } from '../../../hooks';
 import { Alert, ButtonComponent, InputComponent } from '../../../components';
-import { createTaskService, updateTaskService } from '../services/tasks.service';
+import {
+  createTaskService,
+  updateTaskService,
+} from '../services/tasks.service';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useModals } from '../../../hooks/useModals';
+import { successToast } from '../../../utilities/toasts';
 
 export const ModalFormTasks = () => {
   const {
-    modalFormTaskVisibility,
-    handleModalFormTaskVisibility,
-    project,
-    setProject,
-  } = useProjects();
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const { socket } = useProjects();
+
+  const { modalFormTaskVisibility, handleModalFormTaskVisibility } =
+    useModals();
 
   const params = useParams();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('');
-  const [deliveryDate, setDeliveryDate] = useState('');
-  const [alert, setAlert] = useState<any>({});
 
   const { task, updateTasksContext } = useProjects();
 
@@ -28,59 +35,62 @@ export const ModalFormTasks = () => {
 
   useEffect(() => {
     if (task?._id) {
-      setName(task.name);
-      setDescription(task.description);
-      setDeliveryDate(task.deliveryDate.split('T')[0]);
-      setPriority(task.priority);
+      setValue('name', task.name);
+      setValue('description', task.description);
+      setValue('deliveryDate', task.deliveryDate.split('T')[0]);
+      setValue('priority', task.priority);
     } else {
-      setName('');
-      setDescription('');
-      setDeliveryDate('');
-      setPriority('');
+      setValue('name', '');
+      setValue('description', '');
+      setValue('deliveryDate', '');
+      setValue('priority', '');
     }
   }, [task]);
 
-  console.log('xd')
-
-  const addTask = async (e: any) => {
-    e.preventDefault();
-
-    if ([name, description, priority, deliveryDate].includes('')) {
-      setAlert({
-        msg: 'All fields are required',
-        error: true,
-      });
-      return;
-    }
+  const addTask = async (data: any) => {
     if (task._id) {
-      await editTask()
+      await editTask(data);
     } else {
-      await createTask()
+      await createTask(data);
     }
   };
 
-  const editTask = async () => {
-    console.log(task._id);
+  const editTask = async (data: any) => {
+    const { name, description, priority, deliveryDate } = data;
     try {
       const updatedTask = await callEndpoint(
-        updateTaskService({
-          name,
-          description,
-          priority,
-          deliveryDate,
-          project: params.id,
-        }, task._id)
+        updateTaskService(
+          {
+            name,
+            description,
+            priority,
+            deliveryDate,
+            project: params.id,
+          },
+          task._id
+        )
       );
-      updateTasksContext(updatedTask)
-      setAlert({})
+      console.log(updatedTask);
+      successToast('Task edited successfully');
       handleModalFormTaskVisibility();
+      socket.emit('editTask', updatedTask)
+      resetForm();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const createTask = async () => {
-    console.log(task._id);
+  const resetForm = () => {
+    reset({
+      name: '',
+      description: '',
+      deliveryDate: '',
+      priority: '',
+    });
+  };
+
+  const createTask = async (data: any) => {
+    const { name, description, priority, deliveryDate } = data;
     try {
       const savedTask = await callEndpoint(
         createTaskService({
@@ -91,24 +101,23 @@ export const ModalFormTasks = () => {
           project: params.id,
         })
       );
-      const updatedProject = { ...project };
-      updatedProject.tasks = [...project.tasks, savedTask];
-      setProject(updatedProject);
-      setAlert({})
       handleModalFormTaskVisibility();
+      socket.emit('createTask', savedTask)
+      resetForm();
     } catch (error) {
       console.log(error);
     }
   };
-
-  const { msg } = alert;
 
   return (
     <Transition.Root show={modalFormTaskVisibility} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
-        onClose={() => handleModalFormTaskVisibility()}
+        onClose={() => {
+          handleModalFormTaskVisibility();
+          resetForm();
+        }}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -140,12 +149,15 @@ export const ModalFormTasks = () => {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
               <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button
                   type="button"
-                  className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => handleModalFormTaskVisibility()}
+                  className="bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={() => {
+                    handleModalFormTaskVisibility();
+                    resetForm();
+                  }}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -174,61 +186,98 @@ export const ModalFormTasks = () => {
                     </p>
                   </Dialog.Title>
                   <form
-                    onSubmit={addTask}
-                    className="bg-white p-4 py-8 rounded-md flex flex-col gap-2"
+                    onSubmit={handleSubmit(addTask)}
+                    className="bg-white p-4 py-8 flex flex-col gap-2"
                   >
                     <InputComponent
                       labelText="Name"
-                      id="Name"
+                      id="name"
                       type="text"
                       placeholder="Name"
-                      value={name}
-                      onChange={(e: any) => setName(e.target.value)}
+                      register={register}
+                      additionalInputStyles={errors.name && 'border-b-red-500'}
+                      validationSchema={{
+                        required: {
+                          value: true,
+                          message: 'Email is required',
+                        },
+                        minLength: {
+                          value: 3,
+                          message: 'Please enter a minimum of 3 characters',
+                        },
+                      }}
+                      errors={errors}
                     />
 
                     <InputComponent
                       labelText="Description"
-                      id="Description"
-                      type="Description"
+                      id="description"
+                      type="text"
                       placeholder="Description"
-                      value={description}
-                      onChange={(e: any) => setDescription(e.target.value)}
+                      register={register}
+                      additionalInputStyles={
+                        errors.description && 'border-b-red-500'
+                      }
+                      validationSchema={{
+                        required: {
+                          value: true,
+                          message: 'Description is required',
+                        },
+                        minLength: {
+                          value: 3,
+                          message: 'Please enter a minimum of 3 characters',
+                        },
+                      }}
+                      errors={errors}
                     />
 
                     <InputComponent
                       labelText="DeliveryDate"
-                      id="DeliveryDate"
+                      id="deliveryDate"
                       type="date"
-                      placeholder="DeliveryDate"
-                      value={deliveryDate}
-                      onChange={(e: any) => setDeliveryDate(e.target.value)}
+                      placeholder="Name"
+                      register={register}
+                      additionalInputStyles={errors.name && 'border-b-red-500'}
+                      validationSchema={{
+                        required: {
+                          value: true,
+                          message: 'Delivery date is required',
+                        },
+                      }}
+                      errors={errors}
                     />
 
                     <label
-                      htmlFor={priority}
+                      htmlFor="priority"
                       className="font-bold text-sky-900"
                     >
                       Priority
                     </label>
                     <select
-                      className="w-full text-sky-900 px-4 py-2 rounded-md border-2 border-gray-300 outline-none focus:border-sky-900 focus:border-2 bg-gray-200"
-                      name="priority"
+                      className="w-full text-sky-900 px-4 py-2 border-2 border-gray-300 outline-none focus:border-sky-900 focus:border-2 bg-gray-200"
                       id="priority"
-                      value={priority}
-                      onChange={(e) => setPriority(e.target.value)}
+                      {...register('priority', {
+                        required: {
+                          value: true,
+                          message: 'Priority is required',
+                        },
+                      })}
                     >
                       <option value=""> -- Select priority --</option>
                       {PRIORITIES.map((priority) => {
                         return <option key={priority}>{priority}</option>;
                       })}
                     </select>
+                    {errors.priority?.message && (
+                      <Alert msg={errors.priority?.message} />
+                    )}
 
                     <ButtonComponent
+                      loading={loading}
                       type="submit"
                       btnText={`${task?._id ? 'Edit' : 'Create'} task`}
                       addtionalStyles="mt-4"
                     />
-                    {msg && <Alert alert={alert} />}
                   </form>
                 </div>
               </div>

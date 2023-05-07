@@ -25,7 +25,7 @@ export const ConfirmAccount = () => {
       <h1 className="text-4xl text-center mb-6 font-bold text-sky-800">
         Confirm account
       </h1>
-      <div className="bg-white p-4 py-8 rounded-md flex flex-col gap-2">
+      <div className="bg-white p-4 py-8 flex flex-col gap-2">
         <h1 className="text-center">
           Your account has been verified successfully, login{' '}
           <Link to="/" className="underline font-bold text-sky-600">

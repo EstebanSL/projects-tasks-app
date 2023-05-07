@@ -3,8 +3,10 @@ import { useProjects } from '../../hooks';
 import { PreviewProjectCard } from './';
 
 export const Projects = () => {
+  // Variables
   const { projects, loading } = useProjects();
 
+  // Conditional template
   if (loading) {
     return (
       <>
@@ -14,6 +16,7 @@ export const Projects = () => {
     );
   }
 
+  // Template
   return (
     <>
       <ContentWrapper>

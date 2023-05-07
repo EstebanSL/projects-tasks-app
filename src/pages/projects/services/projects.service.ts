@@ -18,11 +18,23 @@ export const updateProjectService = async (
 };
 
 export const deleteProjectService = async (
-  id: number
+  id: string
 ): Promise<any> => {
   return await clientAxios.delete(`${projectsURL}/${id}`);
 };
 
 export const getProjectDetailsService = async (id: any): Promise<any> => {
   return await clientAxios.get(`${projectsURL}/${id}`);
+};
+
+export const searchPartnersService = async (body: any): Promise<any> => {
+  return await clientAxios.post(`${projectsURL}/partners`, body);
+};
+
+export const addPartnersService = async (id:string, body: any): Promise<any> => {
+  return await clientAxios.post(`${projectsURL}/partners/${id}`, body);
+};
+
+export const deletePartnersService = async (id:string, body: any): Promise<any> => {
+  return await clientAxios.post(`${projectsURL}/delete-partner/${id}`, body);
 };

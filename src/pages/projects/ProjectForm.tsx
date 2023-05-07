@@ -3,97 +3,120 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProjects } from '../../hooks';
 import { Alert, ButtonComponent, InputComponent } from '../../components';
+import { useForm } from 'react-hook-form';
 
 export const ProjectForm = () => {
-  const { submitProject, updateProject, project } = useProjects();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [deliveryDate, setDeliveryDate] = useState('');
-  const [client, setClient] = useState('');
-  const [alert, setAlert] = useState<any>({});
+  const { submitProject, updateProject, project } = useProjects();
 
   const params = useParams();
 
-  const { msg } = alert;
+  const createProject = async (data: any) => {
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    if ([name, description, deliveryDate, client].includes('')) {
-      setAlert({
-        msg: 'All fields are required',
-        error: true,
-      });
-      return;
-    }
+    const { name, description, deliveryDate, client } = data
 
     !params.id
       ? await submitProject({ name, description, deliveryDate, client })
       : await updateProject({ name, description, deliveryDate, client });
-
-    setAlert({
-      msg: `Project was successfully ${params.id ? 'updated' : 'created'}`,
-      error: false,
-    });
-
-    setName('');
-    setDescription('');
-    setDeliveryDate('');
-    setClient('');
   };
 
   useEffect(() => {
     if (params.id && project.name) {
-      setName(project.name);
-      setDescription(project.description);
-      setDeliveryDate(project.deliveryDate?.split('T')[0]);
-      setClient(project.client);
+      setValue('name', project.name)
+      setValue('description', project.description);
+      setValue('deliveryDate', project.deliveryDate?.split('T')[0]);
+      setValue('client', project.client);
     } else {
       console.log('create');
     }
   }, [params, project]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(createProject)}>
       <InputComponent
         labelText="Name"
-        id="Name"
+        id="name"
         type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e: any) => setName(e.target.value)}
+        placeholder="Email"
+        register={register}
+        additionalInputStyles={errors.name && 'border-b-red-500'}
+        validationSchema={{
+          required: {
+            value: true,
+            message: 'Name is required',
+          },
+          minLength: {
+            value: 3,
+            message: 'Please enter a minimum of 3 characters',
+          },
+        }}
+        errors={errors}
       />
       <InputComponent
         labelText="Description"
-        id="Description"
+        id="description"
         type="text"
         placeholder="Description"
-        value={description}
-        onChange={(e: any) => setDescription(e.target.value)}
+        register={register}
+        additionalInputStyles={errors.description && 'border-b-red-500'}
+        validationSchema={{
+          required: {
+            value: true,
+            message: 'Description is required',
+          },
+          minLength: {
+            value: 3,
+            message: 'Please enter a minimum of 3 characters',
+          },
+        }}
+        errors={errors}
       />
       <InputComponent
-        labelText="DeliveryDate"
-        id="DeliveryDate"
+        labelText="Date"
+        id="deliveryDate"
         type="date"
         placeholder="Delivery date"
-        value={deliveryDate}
-        onChange={(e: any) => setDeliveryDate(e.target.value)}
+        register={register}
+        additionalInputStyles={errors.DeliveryDate && 'border-b-red-500'}
+        validationSchema={{
+          required: {
+            value: true,
+            message: 'Delivery date is required',
+          },
+        }}
+        errors={errors}
       />
       <InputComponent
         labelText="Client"
-        id="Client"
+        id="client"
         type="text"
-        placeholder="Client name"
-        value={client}
-        onChange={(e: any) => setClient(e.target.value)}
+        placeholder="Client"
+        register={register}
+        additionalInputStyles={errors.client && 'border-b-red-500'}
+        validationSchema={{
+          required: {
+            value: true,
+            message: 'Client is required',
+          },
+          minLength: {
+            value: 3,
+            message: 'Please enter a minimum of 3 characters',
+          },
+        }}
+        errors={errors}
       />
 
       <ButtonComponent
         type="submit"
         btnText={params.id ? 'Update project' : 'Create project'}
-        addtionalStyles='mt-8 ml-auto'
+        addtionalStyles="mt-8 ml-auto"
       />
-      {msg && <Alert alert={alert} />}
     </form>
   );
 };

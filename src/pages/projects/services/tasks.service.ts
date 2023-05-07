@@ -22,3 +22,9 @@ export const deleteTaskService = async (
 ): Promise<any> => {
   return await clientAxios.delete(`${tasksURL}/${id}`);
 };
+
+export const completeTaskService = async (
+  id: string
+): Promise<any> => {
+  return await clientAxios.patch(`${tasksURL}/status/${id}`);
+};

@@ -8,49 +8,98 @@ import {
 } from '../pages/projects/services/projects.service';
 import { useAuth, useFetchAndLoad } from '../hooks';
 import { useNavigate } from 'react-router-dom';
+import { errorToast, successToast } from '../utilities/toasts';
+import { io } from 'socket.io-client';
+
+let socket: any;
 
 const ProjectsContext = createContext({});
 
 export const ProjectsContextProvider = ({ children }: any) => {
-  const [projects, setProjects] = useState<any>([]);
-  const [project, setProject] = useState<any>([]);
-  const [modalFormTaskVisibility, SetModaFormTaskVisibility] =
-    useState<any>(false);
+  // VARIABLES - STATES
 
-  const [modalDeleteTaskVisibility, setModalDeleteTaskVisibility] =
-    useState<any>(false);
-
-  const [task, setTask] = useState({});
-
-  const { auth } = useAuth();
-  const { loading, callEndpoint } = useFetchAndLoad();
+  /**
+   * Hook to navigate on the app
+   */
   const navigate = useNavigate();
 
-  const getProjects = async () => {
+  /**
+   * Gets the authenticated user information
+   */
+  const { auth } = useAuth();
+
+  /**
+   * Custom hook that allows to fetch information and know when its loading
+   */
+  const { loading, callEndpoint } = useFetchAndLoad();
+
+  /**
+   * Stores and updates the projects list
+   */
+  const [projects, setProjects] = useState<any>([]);
+
+  /**
+   * Store and update the active project
+   */
+  const [project, setProject] = useState<any>({});
+
+  const [error, setError] = useState<any>(null);
+  const [partner, setPartner] = useState({});
+  const [task, setTask] = useState({});
+
+  // FUNCTIONS
+
+  /**
+   * Fetchs the projects list from the server
+   * @returns {Promise<void>}
+   */
+  const getProjects = async (): Promise<void> => {
     if (auth._id) {
       const data = await callEndpoint(getProjectsService());
       setProjects(data);
     }
   };
 
+  /**
+   * Fetchs the project information from the server
+   * @param {string } id - Project identifier
+   */
   const getProjectDetails = async (id: string) => {
     if (auth._id) {
-      const data = await callEndpoint(getProjectDetailsService(id));
-      setProject(data);
+      try {
+        const data = await callEndpoint(getProjectDetailsService(id));
+        setProject(data);
+      } catch (error) {
+        navigate('/projects');
+        errorToast('Your dont have permission to access this project');
+        setError(error);
+      }
     }
   };
 
-  const submitProject = async (project: any) => {
+  /**
+   * Saves a new project in db and updates the list of projects
+   * @param {Project} project - new project information
+   * @returns
+   */
+  const submitProject = async (project: Project) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
 
       const data = await callEndpoint(createProjectService(project));
       setProjects([...projects, data]);
+      successToast('Project created successfully');
+      navigate('/projects');
     } catch (error) {}
   };
 
-  const updateProject = async (updatedProject: any) => {
+  /**
+   * Saves the edited information inf the project in db and updates the list of projects
+   * @param {updatedProject} updatedProject - Project information updated
+   * @returns
+   */
+  const updateProject = async (updatedProject: Project) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -65,12 +114,17 @@ export const ProjectsContextProvider = ({ children }: any) => {
     } catch (error) {}
   };
 
-  const deleteProject = async (projectId: any) => {
+  /**
+   * Delete a project from the server and updates the prokects
+   * @param {string} projectId - Project identifier
+   * @returns {Promise<void>}
+   */
+  const deleteProject = async (projectId: string): Promise<void> => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
       await callEndpoint(deleteProjectService(projectId));
-      const updatedProjects = projects.filter((projectState: any) => {
+      const updatedProjects = projects.filter((projectState: Project) => {
         return projectState._id !== projectId;
       });
       setProjects(updatedProjects);
@@ -80,52 +134,72 @@ export const ProjectsContextProvider = ({ children }: any) => {
   };
 
   const updateTasksContext = (updatedTask: any) => {
+    console.log(updatedTask);
+    
     const updatedProject = { ...project };
     updatedProject.tasks = updatedProject.tasks?.map((task: any) => {
       return updatedTask._id === task._id ? updatedTask : task;
     });
     setProject(updatedProject);
+    console.log('reordered');
   };
 
-  const handleModalFormTaskVisibility = () => {
-    setTask({});
-    SetModaFormTaskVisibility(!modalFormTaskVisibility);
+  const updateNewUsersTasks = (savedTask: any) => {
+    const updatedProject = { ...project };
+    updatedProject.tasks = [...updatedProject.tasks, savedTask];
+    setProject(updatedProject);
   };
 
-  const handleModalEditTask = (task: any) => {
-    setTask(task);
-    SetModaFormTaskVisibility(!modalFormTaskVisibility);
+  const updateDeleteUsersTasks = (deletedTask: any) => {
+    const updatedProject: Project = { ...project };
+    updatedProject.tasks = updatedProject.tasks?.filter(
+      (StateTask: any) => StateTask._id !== deletedTask._id
+    );
+    setProject(updatedProject);
   };
 
-  const handleModalDeleteTaskVisibility = (task: any) => {
-    setTask(task);
-    setModalDeleteTaskVisibility(!modalDeleteTaskVisibility);
-  };
+  const closeSessionProjects = () => {
+    setProjects([])
+    setProject({})
+  }
 
+  // EFFECTS
   useEffect(() => {
+    console.log('rerender projects context');
+
     getProjects();
   }, [auth]);
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+  }, []);
+
+  //TEMPLATE
 
   return (
     <ProjectsContext.Provider
       value={{
-        deleteProject,
-        getProjectDetails,
-        getProjects,
-        handleModalDeleteTaskVisibility,
-        handleModalEditTask,
-        handleModalFormTaskVisibility,
-        loading,
-        modalDeleteTaskVisibility,
-        modalFormTaskVisibility,
         project,
         projects,
         setProject,
         setProjects,
+        getProjectDetails,
+        getProjects,
         submitProject,
-        task,
         updateProject,
+        deleteProject,
+        loading,
+        task,
+        setTask,
         updateTasksContext,
+        partner,
+        setPartner,
+        error,
+        setError,
+        updateNewUsersTasks,
+        updateDeleteUsersTasks,
+        socket,
+        closeSessionProjects
       }}
     >
       {children}
