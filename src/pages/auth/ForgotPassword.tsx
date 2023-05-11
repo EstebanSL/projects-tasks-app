@@ -39,10 +39,10 @@ export const ForgotPassword = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white rounded-xl p-4 py-8 flex flex-col gap-2"
       >
-          <h1 className="text-4xl text-center mb-6 font-bold text-black">
+          <h1 className="text-4xl text-center mb-6 font-bold text-sky-900">
             FORGOT PASSWORD
           </h1>
-        <p className="text-center font-semibold my-4">
+        <p className="text-center font-semibold text-sky-900 my-4">
           We'll send you an email with the instructions to reset your password
         </p>
         <InputComponent
@@ -51,7 +51,7 @@ export const ForgotPassword = () => {
           type="text"
           placeholder="Email"
           register={register}
-          additionalInputStyles={errors.email && 'border-b-red-500'}
+          additionalInputStyles={errors.email && 'border-b-red-300'}
           validationSchema={{
             required: {
               value: true,
