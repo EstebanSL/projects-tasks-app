@@ -249,12 +249,12 @@ export const ModalFormTasks = () => {
 
                     <label
                       htmlFor="priority"
-                      className="font-bold text-sky-900"
+                      className="font-bold text-slate-900"
                     >
                       Priority
                     </label>
                     <select
-                      className="w-full text-sky-900 px-4 py-2 border-2 border-gray-300 outline-none focus:border-sky-900 focus:border-2 bg-gray-200"
+                      className="w-full text-slate-900 px-4 py-2 border-2 border-gray-300 outline-none focus:border-sky-900 focus:border-2 bg-gray-200"
                       id="priority"
                       {...register('priority', {
                         required: {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useProjects } from '../../hooks';
-import { Alert, ButtonComponent, InputComponent } from '../../components';
+import { ButtonComponent, InputComponent } from '../../components';
 import { useForm } from 'react-hook-form';
 
 export const ProjectForm = () => {
@@ -13,32 +13,38 @@ export const ProjectForm = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate()
+
   const { submitProject, updateProject, project } = useProjects();
 
   const params = useParams();
 
   const createProject = async (data: any) => {
-
-    const { name, description, deliveryDate, client } = data
+    const { name, description, deliveryDate, client } = data;
 
     !params.id
       ? await submitProject({ name, description, deliveryDate, client })
       : await updateProject({ name, description, deliveryDate, client });
   };
 
+  const handleCancel = () => {
+    navigate(-1)
+  }
+
   useEffect(() => {
     if (params.id && project.name) {
-      setValue('name', project.name)
+      setValue('name', project.name);
       setValue('description', project.description);
       setValue('deliveryDate', project.deliveryDate?.split('T')[0]);
       setValue('client', project.client);
-    } else {
-      console.log('create');
     }
   }, [params, project]);
 
   return (
-    <form onSubmit={handleSubmit(createProject)}>
+    <form
+      onSubmit={handleSubmit(createProject)}
+      className="flex flex-col gap-4"
+    >
       <InputComponent
         labelText="Name"
         id="name"
@@ -78,7 +84,7 @@ export const ProjectForm = () => {
         errors={errors}
       />
       <InputComponent
-        labelText="Date"
+        labelText="Delivery date"
         id="deliveryDate"
         type="date"
         placeholder="Delivery date"
@@ -112,11 +118,21 @@ export const ProjectForm = () => {
         errors={errors}
       />
 
+      <div className="flex mt-8 gap-4">
+      <ButtonComponent
+        type="button"
+        btnText='Cancel'
+        addtionalStyles="ml-auto rounded-md"
+        styleType="destructive"
+        onClick={() => handleCancel()}
+      />
       <ButtonComponent
         type="submit"
+        addtionalStyles='rounded-md'
         btnText={params.id ? 'Update project' : 'Create project'}
-        addtionalStyles="mt-8 ml-auto"
+        styleType="primary"
       />
+      </div>
     </form>
   );
 };

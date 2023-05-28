@@ -5,11 +5,14 @@ import { useProjects } from '../hooks';
 const ModalsContext = createContext({});
 
 export const ModalContextProvider = ({ children }: any) => {
-  const { setTask, setPartner } = useProjects();
+  const { setTask, setPartner, setProject } = useProjects();
   const [modalFormTaskVisibility, SetModalFormTaskVisibility] =
     useState<any>(false);
 
   const [modalDeleteTaskVisibility, setModalDeleteTaskVisibility] =
+    useState<any>(false);
+
+    const [modalDeleteProjectVisibility, setModalDeleteProjectVisibility] =
     useState<any>(false);
 
   const [modalDeletePartnerVisibility, setModalDeletePartnerVisibility] =
@@ -32,6 +35,10 @@ export const ModalContextProvider = ({ children }: any) => {
     setTask(task);
     setModalDeleteTaskVisibility(!modalDeleteTaskVisibility);
   };
+  const handleModalDeleteProjectVisibility = (project: any) => {
+    setProject(project);
+    setModalDeleteProjectVisibility(!modalDeleteProjectVisibility);
+  };
   const handleModalDeletePartnerVisibility = (partner: any) => {
     setPartner(partner);
     setModalDeletePartnerVisibility(!modalDeletePartnerVisibility);
@@ -45,11 +52,13 @@ export const ModalContextProvider = ({ children }: any) => {
       value={{
         handleModalDeletePartnerVisibility,
         handleModalDeleteTaskVisibility,
+        handleModalDeleteProjectVisibility,
         handleModalEditTask,
         handleModalFormTaskVisibility,
         handleModalSearchBoxVisibility,
         modalDeletePartnerVisibility,
         modalDeleteTaskVisibility,
+        modalDeleteProjectVisibility,
         modalFormTaskVisibility,
         modalSearchBoxVisibility
       }}

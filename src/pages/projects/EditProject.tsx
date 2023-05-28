@@ -6,7 +6,7 @@ import ContentWrapper from '../../components/ContentWrapper';
 
 export const EditProject = () => {
   const params = useParams();
-  const { getProjectDetails, deleteProject } = useProjects();
+  const { getProjectDetails } = useProjects();
 
   const getProject = async () => getProjectDetails(params.id);
 
@@ -17,7 +17,7 @@ export const EditProject = () => {
   return (
     <ContentWrapper>
       <div>
-        <h1 className="text-4xl font-bold text-sky-800 mt-4 mb-8 text-center">EditProject</h1>
+        <h1 className="text-4xl font-bold text-slate-900 mt-4 mb-8 text-center">Edit Project</h1>
       </div>
 
       <ProjectForm />

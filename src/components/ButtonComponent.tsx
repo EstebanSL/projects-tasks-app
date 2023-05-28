@@ -22,15 +22,15 @@ export const ButtonComponent = ({
 }: Props) => {
 
   const styleTypeClassess: any = {
-    primary: 'from-cyan-500 to-blue-500',
-    destructive: 'from-red-500 to-orange-500'
+    primary: 'bg-slate-900',
+    destructive: 'bg-red-600'
   }
 
   return (
     <button 
       type={type}
       className={
-        `bg-gradient-to-r flex gap-2 items-center justify-center px-4 py-2 box-border text-white font-bold hover:opacity-75 transition ease-in duration-100 ${styleTypeClassess[styleType]} ${addtionalStyles}`
+        `bg-gradient-to-r rounded-md flex gap-2 items-center justify-center px-4 py-2 box-border text-white font-bold hover:opacity-75 transition ease-in duration-100 ${styleTypeClassess[styleType]} ${addtionalStyles}`
       }
       onClick={type === 'button' ? onClick : undefined}
     >

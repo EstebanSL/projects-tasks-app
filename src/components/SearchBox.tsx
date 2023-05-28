@@ -36,7 +36,7 @@ const SarchBox = () => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
+          <Dialog.Overlay className="fixed inset-0 bg-fullDark bg-opacity-50 transition-opacity" />
         </Transition.Child>
 
         <Transition.Child
@@ -55,7 +55,7 @@ const SarchBox = () => {
           >
             <div className="relative">
               <Combobox.Input
-                className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm"
+                className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-fullDark placeholder-gray-400 focus:ring-0 sm:text-sm"
                 placeholder="Buscar..."
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -71,7 +71,7 @@ const SarchBox = () => {
                       <Combobox.Option
                         key={project._id}
                         value={project}
-                        className={({active}) => classNames('cursor-default select-none px-4 py-2', active && 'bg-sky-600 text-white')}
+                        className={({active}) => classNames('cursor-default select-none px-4 py-2', active && 'bg-white text-fullDark')}
                       >
                         {project.name}
                       </Combobox.Option>

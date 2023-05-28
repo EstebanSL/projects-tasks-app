@@ -91,7 +91,9 @@ export const ProjectsContextProvider = ({ children }: any) => {
       setProjects([...projects, data]);
       successToast('Project created successfully');
       navigate('/projects');
-    } catch (error) {}
+    } catch (error) {
+      errorToast('error creating project')
+    }
   };
 
   /**
@@ -107,11 +109,14 @@ export const ProjectsContextProvider = ({ children }: any) => {
         updateProjectService(project._id, updatedProject)
       );
       const updatedProjects = projects.map((projectState: any) => {
-        return projectState._id === data ? data : projectState;
+        return projectState._id === data._id ? data : projectState;
       });
-      console.log(updatedProjects);
       setProjects(updatedProjects);
-    } catch (error) {}
+      successToast('Project edited successfully');
+      navigate(`/projects/${project._id}`)
+    } catch (error) {
+      errorToast('Error while updating project')
+    }
   };
 
   /**
@@ -128,20 +133,17 @@ export const ProjectsContextProvider = ({ children }: any) => {
         return projectState._id !== projectId;
       });
       setProjects(updatedProjects);
-      console.log(updatedProjects);
       navigate('/projects');
     } catch (error) {}
   };
 
   const updateTasksContext = (updatedTask: any) => {
-    console.log(updatedTask);
     
     const updatedProject = { ...project };
     updatedProject.tasks = updatedProject.tasks?.map((task: any) => {
       return updatedTask._id === task._id ? updatedTask : task;
     });
     setProject(updatedProject);
-    console.log('reordered');
   };
 
   const updateNewUsersTasks = (savedTask: any) => {
@@ -158,6 +160,15 @@ export const ProjectsContextProvider = ({ children }: any) => {
     setProject(updatedProject);
   };
 
+  const updateDeleteUsersProject = (deletedProject: any) => {
+    let updatedProjects: Project[] = { ...projects };
+    updatedProjects = projects.filter(
+      (project: any) => project._id !== deletedProject._id
+    );
+
+    setProjects(updatedProjects);
+  };
+
   const closeSessionProjects = () => {
     setProjects([])
     setProject({})
@@ -165,7 +176,6 @@ export const ProjectsContextProvider = ({ children }: any) => {
 
   // EFFECTS
   useEffect(() => {
-    console.log('rerender projects context');
 
     getProjects();
   }, [auth]);
@@ -199,7 +209,8 @@ export const ProjectsContextProvider = ({ children }: any) => {
         updateNewUsersTasks,
         updateDeleteUsersTasks,
         socket,
-        closeSessionProjects
+        closeSessionProjects,
+        updateDeleteUsersProject
       }}
     >
       {children}

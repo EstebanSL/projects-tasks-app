@@ -16,12 +16,12 @@ export const InputComponent = ({
   return (
     <div className="">
       <div className={`flex flex-col gap-1 ${additionalContainerStyles}`}>
-        <label htmlFor={id} className="font-semibold text-sky-900">
+        <label htmlFor={id} className="font-semibold text-slate-900">
           {labelText}
         </label>
         <input
           id={id}
-          className={`w-full text-sky-900 px-4 py-2 box-border border-b-2 outline-0 focus:border-b-sky-500 ${additionalInputStyles}`}
+          className={`w-full text-slate-800 px-4 py-2 box-border border-b-2 outline-0 focus:border-b-sky-500 ${additionalInputStyles}`}
           tabIndex={0}
           type={type}
           placeholder={placeholder}

@@ -62,9 +62,9 @@ export const Login = () => {
     <div className="h-screen flex flex-col justify-center w-full max-w-screen-md">
       <form
         onSubmit={handleSubmit(loginUser)}
-        className="bg-white rounded-xl p-8 flex flex-col gap-2"
+        className="bg-white p-8 flex flex-col gap-2"
       >
-        <h1 className="text-4xl text-center mb-6 font-bold text-sky-900">
+        <h1 className="text-4xl text-center mb-6 font-bold text-slate-900">
           LOGIN
         </h1>
         <InputComponent
@@ -116,7 +116,7 @@ export const Login = () => {
           loading={loading}
           type="submit"
           btnText="Log In"
-          addtionalStyles="mt-4 rounded-full"
+          addtionalStyles="mt-4"
           styleType='primary'
         />
 

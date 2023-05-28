@@ -1,6 +1,8 @@
 import ContentWrapper from '../../components/ContentWrapper';
+import Loader from '../../components/Loader';
 import { useProjects } from '../../hooks';
 import { PreviewProjectCard } from './';
+import { ModalDeleteProject } from './components/ModalDeleteProject';
 
 export const Projects = () => {
   // Variables
@@ -10,8 +12,7 @@ export const Projects = () => {
   if (loading) {
     return (
       <>
-        <h1 className="text-4xl font-bold m-8">Projects</h1>
-        <p>Loading...</p>
+        <Loader />
       </>
     );
   }
@@ -20,10 +21,10 @@ export const Projects = () => {
   return (
     <>
       <ContentWrapper>
-        <h1 className="text-4xl font-bold mb-8 mt-4 text-center text-sky-800">
+        <h1 className="text-4xl font-bold mb-8 mt-4 text-center text-slate-900">
           Projects
         </h1>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col auto-cols-max gap-4 justify-center">
           {projects.length === 0 ? (
             <p>No projects found</p>
           ) : (

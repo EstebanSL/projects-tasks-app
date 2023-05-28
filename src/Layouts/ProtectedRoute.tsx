@@ -2,12 +2,13 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks';
 import { Header, Sidebar } from '../components';
 import { ModalContextProvider, ProjectsContextProvider } from '../context';
+import Loader from '../components/Loader';
 
 export const ProtectedRoute = () => {
   const { auth, loadingAuthentication } = useAuth();
 
   if (loadingAuthentication) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return (
@@ -18,7 +19,7 @@ export const ProtectedRoute = () => {
             <Header />
             <div className="flex min-h-[calc(100vh-72px)] z-10">
               <Sidebar />
-              <main className="p-6 flex-1">
+              <main className="ml-[320px] p-6 flex-1 relative mt-[72px] min-h-[calc(100vh-72px)]">
                 <Outlet />
               </main>
             </div>

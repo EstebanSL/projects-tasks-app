@@ -11,6 +11,7 @@ import { ModalDeletePartner } from './components/ModalDeletePartner';
 import { useModals } from '../../hooks/useModals';
 import useAdmin from '../../hooks/useAdmin';
 import { io } from 'socket.io-client';
+import Loader from '../../components/Loader';
 
 let socket: any;
 export const ProjectDetails = () => {
@@ -25,7 +26,8 @@ export const ProjectDetails = () => {
     setProject,
     updateTasksContext,
     updateNewUsersTasks,
-    updateDeleteUsersTasks
+    updateDeleteUsersTasks,
+    updateDeleteUsersProjects,
   } = useProjects();
 
   const { handleModalFormTaskVisibility } = useModals();
@@ -43,11 +45,7 @@ export const ProjectDetails = () => {
 
   useEffect(() => {
     getProjectDetails(params.id);
-    console.log('loaded');
-
     return () => {
-      console.log('destroyed');
-
       setError(null);
       setProject({});
     };
@@ -56,7 +54,6 @@ export const ProjectDetails = () => {
   useEffect(() => {
     socket = io(import.meta.env.VITE_BACKEND_URL);
     socket.emit('openProject', params.id);
-    console.log('new socket', socket);
 
     return () => {
       socket.disconnect();
@@ -69,14 +66,17 @@ export const ProjectDetails = () => {
         updateNewUsersTasks(newTask);
       }
     });
-
     socket?.on('deletedTask', (deletedTask: any) => {
       if (deletedTask.project === project._id) {
         updateDeleteUsersTasks(deletedTask);
       }
     });
+    socket?.on('deletedProject', (deletedProject: any) => {
+      if (deletedProject.project === project._id) {
+        updateDeleteUsersProjects(deletedProject);
+      }
+    });
     socket?.on('editedTask', (editedTask: any) => {
-      console.log(editedTask)
       if (editedTask.project._id === project._id) {
         updateTasksContext(editedTask);
       }
@@ -84,7 +84,7 @@ export const ProjectDetails = () => {
   });
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   if (error) {
@@ -94,7 +94,11 @@ export const ProjectDetails = () => {
   return (
     <ContentWrapper>
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-4xl font-bold text-sky-800">{project.name}</h1>
+        <div className="flex-col flex">
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">{project.name}</h1>
+          <p>Client: {project.client}</p>
+          <p>Delivery date: {project.deliveryDate}</p>
+        </div>
         {admin && (
           <>
             <div
@@ -145,7 +149,7 @@ export const ProjectDetails = () => {
       {admin && (
         <ButtonComponent
           btnText="AddTask"
-          addtionalStyles="mt-6 mb-4"
+          addtionalStyles="mt-6 mb-4 mx-auto"
           onClick={() => handleModalFormTaskVisibility()}
           type="button"
         >
@@ -168,7 +172,7 @@ export const ProjectDetails = () => {
 
       <p className="font-black text-2xl mt-8 mb-4">Project tasks</p>
 
-      <div>
+      <div className='flex flex-col gap-4'>
         {project.tasks?.length < 1 ? (
           <p>There is not tasks in this projects</p>
         ) : (
@@ -183,8 +187,28 @@ export const ProjectDetails = () => {
           <p className="font-black text-2xl mt-8 mb-4">Project partners</p>
 
           <div>
-            <p>Partners</p>
-            <Link to={`/projects/new-partner/${project._id}`}>Add</Link>
+          <ButtonComponent
+          btnText=""
+          addtionalStyles="mt-6 mb-4 mx-auto"
+          onClick={() => navigate(`/projects/new-partner/${project._id}`)}
+          type="button"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+          <Link to={`/projects/new-partner/${project._id}`}>Add Partner</Link>
+        </ButtonComponent>
 
             <div>
               {project.partners?.length < 1 ? (
