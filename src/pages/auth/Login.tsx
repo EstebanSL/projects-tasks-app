@@ -58,15 +58,15 @@ export const Login = () => {
 
   //Template
   return (
-    <div className="w-full h-screen flex gap-10">
+    <div className="w-full min-h-screen flex gap-10">
       <div className="w-full m-auto rounded-[50%] hidden lg:flex items-center justify-center bg-gradient-to-r max-w-screen-md p-4">
         <img
-          src="undraw_add_user_re_5oib.svg"
+          src="undraw_login_re_4vu2.svg"
           className="w-full max-w-md"
           alt="login image"
         />
       </div>
-      <div className="h-screen flex flex-col gap-4 justify-center w-full max-w-screen-md">
+      <div className="flex flex-col gap-4 justify-center w-full max-w-screen-md">
         <img
           src="Google Tasks.svg"
           width="200"
