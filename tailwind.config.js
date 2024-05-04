@@ -5,7 +5,12 @@ export default {
     extend: {
       boxShadow: {
         '3xl': '0 0px 5px 0px rgba(0, 0, 0, 0.3)',
-      }
+      },
+      colors: {
+        primary: "#1474ec",
+        secondary: "#3990fb",
+        disabled: "#8cc4fc",
+      },
     }
   },
   plugins: [],

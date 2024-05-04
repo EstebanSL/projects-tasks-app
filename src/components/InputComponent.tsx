@@ -1,8 +1,8 @@
-import { Alert } from './Alert';
+import { Alert } from "./Alert";
 
 export const InputComponent = ({
   id,
-  labelText,
+  hasError,
   errors,
   disabled,
   placeholder,
@@ -16,12 +16,11 @@ export const InputComponent = ({
   return (
     <div className="">
       <div className={`flex flex-col gap-1 ${additionalContainerStyles}`}>
-        <label htmlFor={id} className="font-semibold text-slate-900">
-          {labelText}
-        </label>
         <input
           id={id}
-          className={`w-full text-slate-800 px-4 py-2 box-border border-b-2 outline-0 focus:border-b-sky-500 ${additionalInputStyles}`}
+          className={`w-full text-slate-800 p-4 box-border border-2 bg-gray-100 rounded-[20px] outline-0 focus:border-primary ${additionalInputStyles} ${
+            hasError ? "border-red-500" : "border-gray-100"
+          }`}
           tabIndex={0}
           type={type}
           placeholder={placeholder}
