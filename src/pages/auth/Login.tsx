@@ -76,7 +76,7 @@ export const Login = () => {
         />
         <div className="text-center flex flex-col gap-4">
           <h2 className="text-4xl">Welcome back</h2>
-          <span className="text-sm text-gray-400">
+          <span className="text-md text-gray-400">
             Please login to your account
           </span>
         </div>
@@ -127,7 +127,7 @@ export const Login = () => {
             errors={errors}
           />
           <Link
-            className="ml-auto text-sm text-gray-400 hover:underline"
+            className="ml-auto text-[15px] text-gray-400 hover:underline"
             to="/reset-password"
           >
             Forgot your password?
@@ -142,8 +142,8 @@ export const Login = () => {
           />
 
           <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">
-            <Link className="hover:underline ml-auto text-gray-400" to="/register">
-              Don't have an account? Register here!
+            <Link className="ml-auto text-gray-400 text-[15px]" to="/register">
+              Don't have an account? <span className="text-primary underline">Register here!</span>
             </Link>
           </nav>
         </form>
