@@ -52,7 +52,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="w-full min-h-screen gap-10">
+    <div className="w-full min-h-screen gap-10 py-10">
       <div className="m-auto min-h-screen flex flex-col gap-4 justify-center w-full max-w-screen-md">
         <img
           src="Google Tasks.svg"
