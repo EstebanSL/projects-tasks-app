@@ -7,6 +7,9 @@ import { LoginUserService } from "./services/Auth.service";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { errorToast } from "../../utilities/toasts";
 
+import loginImage from './../../assets/undraw_login_re_4vu2.svg'
+import logoImage from './../../assets/Google Tasks.svg'
+
 export const Login = () => {
   /**
    * [useForm]
@@ -61,14 +64,14 @@ export const Login = () => {
     <div className="w-full min-h-screen flex gap-10">
       <div className="w-full m-auto rounded-[50%] hidden lg:flex items-center justify-center bg-gradient-to-r max-w-screen-md p-4">
         <img
-          src="undraw_login_re_4vu2.svg"
+          src={loginImage}
           className="w-full max-w-md"
           alt="login image"
         />
       </div>
       <div className="flex flex-col gap-4 justify-center w-full max-w-screen-md">
         <img
-          src="Google Tasks.svg"
+          src={logoImage}
           width="200"
           height="200"
           className="text-center mx-auto max-w-md"

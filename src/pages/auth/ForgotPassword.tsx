@@ -6,6 +6,9 @@ import { useFetchAndLoad } from "../../hooks";
 import { useForm } from "react-hook-form";
 import { errorToast, successToast } from "../../utilities/toasts";
 
+import forgotPassImage from './../../assets/undraw_forgot_password_re_hxwm.svg'
+import logoImage from './../../assets/Google Tasks.svg'
+
 export const ForgotPassword = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
 
@@ -35,14 +38,14 @@ export const ForgotPassword = () => {
     <div className="w-full min-h-screen flex gap-10">
       <div className="w-full m-auto rounded-[50%] hidden lg:flex items-center justify-center bg-gradient-to-r max-w-screen-md p-4">
         <img
-          src="undraw_forgot_password_re_hxwm.svg"
+          src={forgotPassImage}
           className="w-full max-w-md"
           alt="login image"
         />
       </div>
       <div className="flex flex-col gap-4 justify-center w-full max-w-screen-md">
         <img
-          src="Google Tasks.svg"
+          src={logoImage}
           width="200"
           height="200"
           className="text-center mx-auto max-w-md"

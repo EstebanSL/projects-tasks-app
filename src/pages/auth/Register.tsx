@@ -4,6 +4,7 @@ import { RegisterUserService } from "./services";
 import { ButtonComponent, InputComponent } from "../../components";
 import { useForm } from "react-hook-form";
 import { errorToast, successToast } from "../../utilities/toasts";
+import logoImage from './../../assets/Google Tasks.svg'
 
 export const Register = () => {
   /**
@@ -55,11 +56,11 @@ export const Register = () => {
     <div className="w-full min-h-screen gap-10 py-10">
       <div className="m-auto min-h-screen flex flex-col gap-4 justify-center w-full max-w-screen-md">
         <img
-          src="Google Tasks.svg"
+          src={logoImage}
           width="200"
           height="200"
           className="text-center mx-auto max-w-md"
-          alt="login image"
+          alt="register image"
         />
         <div className="text-center flex flex-col gap-4">
           <h2 className="text-4xl">
