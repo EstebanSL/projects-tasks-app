@@ -140,7 +140,7 @@ export const Login = () => {
             loading={loading}
             type="submit"
             btnText="Log In"
-            addtionalStyles="mt-4"
+            addtionalStyles="mt-4 p-4"
             styleType="primary"
           />
 

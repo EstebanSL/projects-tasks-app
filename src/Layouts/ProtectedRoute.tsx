@@ -18,8 +18,7 @@ export const ProtectedRoute = () => {
           <div>
             <Header />
             <div className="flex min-h-[calc(100vh-72px)] z-10">
-              <Sidebar />
-              <main className="ml-[320px] p-6 flex-1 relative mt-[72px] min-h-[calc(100vh-72px)]">
+              <main className="p-6 flex-1 relative mt-[56px] min-h-[calc(100vh-72px)]">
                 <Outlet />
               </main>
             </div>

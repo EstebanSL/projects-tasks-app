@@ -122,13 +122,12 @@ export const ProjectForm = () => {
       <ButtonComponent
         type="button"
         btnText='Cancel'
-        addtionalStyles="ml-auto rounded-md"
+        addtionalStyles="ml-auto"
         styleType="destructive"
         onClick={() => handleCancel()}
       />
       <ButtonComponent
         type="submit"
-        addtionalStyles='rounded-md'
         btnText={params.id ? 'Update project' : 'Create project'}
         styleType="primary"
       />

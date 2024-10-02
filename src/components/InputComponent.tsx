@@ -1,4 +1,5 @@
 import { Alert } from "./Alert";
+import { Input } from "./ui/input";
 
 export const InputComponent = ({
   id,
@@ -16,11 +17,9 @@ export const InputComponent = ({
   return (
     <div className="">
       <div className={`flex flex-col gap-1 ${additionalContainerStyles}`}>
-        <input
+        <Input
           id={id}
-          className={`w-full text-slate-800 p-4 box-border border-2 bg-gray-100 rounded-[20px] outline-0 focus:border-primary ${additionalInputStyles} ${
-            hasError ? "border-red-500" : "border-gray-100"
-          }`}
+          className={`w-full ${additionalInputStyles} ${hasError && "border-red-500"}`}
           tabIndex={0}
           type={type}
           placeholder={placeholder}

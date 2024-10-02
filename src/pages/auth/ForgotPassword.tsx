@@ -89,7 +89,7 @@ export const ForgotPassword = () => {
             loading={loading}
             type="submit"
             btnText="Send instructions"
-            addtionalStyles="mt-4"
+            addtionalStyles="mt-4 p-4"
             styleType="primary"
           />
           <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">

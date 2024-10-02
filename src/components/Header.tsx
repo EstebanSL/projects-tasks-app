@@ -17,7 +17,7 @@ export const Header = () => {
 
   const { handleModalSearchBoxVisibility } = useModals();
   return (
-    <div className="shadow-md p-4 bg-white rounded-br-xl flex justify-between items-center drop-shadow-md z-50 fixed w-full">
+    <div className="shadow-md p-2 bg-white flex justify-between items-center drop-shadow-sm z-50 fixed w-full">
       <Link
         to="/projects"
         className="text-3xl font-black"
@@ -28,9 +28,8 @@ export const Header = () => {
       <div className="flex items-center gap-4">
         <ButtonComponent
           type="button"
-          btnText="Search project"
           onClick={() => handleModalSearchBoxVisibility()}
-          addtionalStyles="rounded-md"
+          addtionalStyles="rounded-md p-2"
           styleType="primary"
         >
           <svg
@@ -50,9 +49,8 @@ export const Header = () => {
         </ButtonComponent>
         <ButtonComponent
           type="button"
-          btnText="Log out"
           onClick={() => closeSession()}
-          addtionalStyles="rounded-md"
+          addtionalStyles="rounded-md p-2"
           styleType="destructive"
         >
           <svg

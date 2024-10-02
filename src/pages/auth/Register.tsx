@@ -165,11 +165,11 @@ export const Register = () => {
             loading={loading}
             type="submit"
             btnText="Register"
-            addtionalStyles="mt-4"
+            addtionalStyles="mt-4 p-4"
             styleType="primary"
           />
 
-          <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-600 font-normal gap-4">
+          <nav className="flex flex-wrap justify-between max-sm:flex-col max-sm:text-center mt-4 text-gray-400 font-normal gap-4">
             <Link className="ml-auto text-[15px]" to="/">
               Already have an account?{" "}
               <span className="text-primary underline">Log In</span>

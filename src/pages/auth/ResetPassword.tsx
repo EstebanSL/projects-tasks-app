@@ -141,7 +141,7 @@ export const ResetPassword = () => {
                 loading={loading}
                 type="submit"
                 btnText="Reset Password"
-                addtionalStyles="mt-4"
+                addtionalStyles="mt-4 p-4"
                 styleType="primary"
               />
             </>
